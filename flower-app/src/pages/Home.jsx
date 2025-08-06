@@ -1,22 +1,52 @@
 import MovieCard from "../components/movieCard"
-import { useState } from 'react';
+import { use, useState } from 'react';
+import { searchMovies, getPopularMovies } from "../services/api";
 import "../css/Home.css"; // Assuming you have a CSS file for styling the Home page
+import { useEffect } from "react";
 function Home() {
-    const movies = [
-
-        { id: 1, title: "Inception", release_date: 2010, rating: 8.8 },
-        { id: 2, title: "The Dark Knight", release_date: 2008 },
-        { id: 3, title: "Interstellar", release_date: 2014 }
-    ]
-
+    const [movies, setMovies] = useState([]);
     const [toSearch, setToSearch] = useState("");
+    const [err, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const handleSearch = (e) => {
+    useEffect(() => {
+        const loadPopularMovies = async () => {
+            try {
+                const popularMovies = await getPopularMovies();
+                setMovies(popularMovies);
+            } catch (err) {
+                console.error("Error fetching popular movies:", err);
+                setError("Failed to fetch popular movies. Please try again later.");
+            }
+            finally {
+                setLoading(false); // Set loading to false after fetching movies}
+            }
+        }
+        loadPopularMovies();
+    }, [])
+
+
+
+    const handleSearch = async (e) => {
         // This function would typically make an API call to search for movies
         // For now, we will just log the search term
         e.preventDefault(); // Prevent form reload
-        alert(`Searching for: ${toSearch}`);
-        setToSearch(""); // Clear the search input after submission
+
+
+        if (!toSearch.trim()) return
+        if (loading) return // Prevent multiple searches while loading
+        setLoading(true)
+        try {
+            const searchResults = await searchMovies(toSearch);
+            setMovies(searchResults)
+            setError(null) // Clear any previous errors
+        } catch (err) {
+            setError("Failed to search for movies")
+
+        } finally {
+            setLoading(false) // Set loading to false after search
+        }
+
     }
 
 
@@ -26,16 +56,20 @@ function Home() {
             <form onSubmit={handleSearch} className="search-form">
                 <input type="text" placeholder="Search for a movie..." className="search-input" value={toSearch}
                     onChange={(e) => setToSearch(e.target.value)} />
-                <button type="submit" className="search-button" onClick={handleSearch}>Search</button>
+                <button type="submit" className="search-button" >Search</button>
             </form>
 
-            <div className="movie-grid">
+
+
+            {err && <div className="error-message">{err}</div>}
+            {loading ? (<div className="loading">Loading...</div>) : (<div className="movie-grid">
                 {movies.map(movie =>
                 (
                     <MovieCard key={movie.id} movie={movie} />
                 )
                 )}
-            </div>
+            </div>)}
+
         </div>
     </div>
     );
