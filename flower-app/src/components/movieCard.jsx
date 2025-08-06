@@ -1,7 +1,11 @@
+import "../css/MovieCard.css"; // Assuming you have a CSS file for styling the MovieCard
+
 function MovieCard({ movie }) {
     function onFavoriteClick() {
         alert("You clicked the favorite button!");
     }
+
+
     return <div className="movie-card">
         <div className="movie-poster">
             <img src={movie.url} alt={movie.title} />

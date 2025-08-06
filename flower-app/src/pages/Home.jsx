@@ -1,5 +1,6 @@
 import MovieCard from "../components/movieCard"
 import { useState } from 'react';
+import "../css/Home.css"; // Assuming you have a CSS file for styling the Home page
 function Home() {
     const movies = [
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import './index.css';
+import './css/index.css';
 import App from './App.js';
 import { BrowserRouter } from 'react-router-dom';
 import { StrictMode } from 'react';
