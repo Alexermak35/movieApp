@@ -1,9 +1,23 @@
 import "../css/MovieCard.css"; // Assuming you have a CSS file for styling the MovieCard
+import {
+    useMovieContext
+
+} from "../contexts/MovieContext.jsx";
+import { useContext } from "react";
 
 function MovieCard({ movie }) {
 
-    function onFavoriteClick() {
-        alert("You clicked the favorite button!");
+    const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
+    const favorite = isFavorite(movie.id);
+
+    function onFavoriteClick(e) {
+        // alert("You clicked the favorite button!");
+        e.preventDefault();
+        if (favorite) {
+            removeFromFavorites(movie.id);
+        } else {
+            addToFavorites(movie);
+        }
     }
 
 
@@ -11,7 +25,9 @@ function MovieCard({ movie }) {
         <div className="movie-poster">
             <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
             <div className="movie-overplay">
-                <button className="favorite-btn" onClick={onFavoriteClick}>❤️</button>
+                <button className={`favorite-btn ${favorite ? "active" : ""}`} onClick={onFavoriteClick}>
+                    {favorite ? "❤️" : "🤍"}
+                </button>
             </div>
 
         </div>

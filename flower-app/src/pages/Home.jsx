@@ -3,6 +3,8 @@ import { use, useState } from 'react';
 import { searchMovies, getPopularMovies } from "../services/api";
 import "../css/Home.css"; // Assuming you have a CSS file for styling the Home page
 import { useEffect } from "react";
+
+
 function Home() {
     const [movies, setMovies] = useState([]);
     const [toSearch, setToSearch] = useState("");
