@@ -1,7 +1,23 @@
-import { use, useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 
 
 function Login() {
+
+    const [users, setUsers] = useState([]);
+
+
+    useEffect(() => {
+        fetchUsers();
+    }, [])
+
+    const fetchUsers = async () => {
+        const response = await axios.get("http://localhost:8080/users")
+        console.log(response.data);
+        setUsers(response.data);
+    }
+
 
     const [login, setLogin] = useState(true);
 
@@ -17,6 +33,27 @@ function Login() {
         <>
             <div>
                 <h3>{login ? "Login Page" : "Register Page"}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {users.map((user) => (
+                            <tr>
+                                <td>{user.id}</td>
+                                <td>{user.username}</td>
+                                <td>{user.email}</td>
+                                <td>{user.password}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
             <div className="login">
                 {login ? (
