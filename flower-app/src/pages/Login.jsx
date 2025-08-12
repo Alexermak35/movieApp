@@ -40,7 +40,7 @@ function Login() {
             console.log(created.data);
 
             // append new user to the list
-            setUsers((prev) => [...prev, created]);
+            setUsers((prev) => [...prev, created.data]);
             setOk("Regestration is successfull!");
             setRegister({ "username": "", "email": "", "password": "" });
             setConfirmPassword("");
@@ -66,15 +66,28 @@ function Login() {
 
     const [login, setLogin] = useState(true);
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault?.();
+        setError("");
+        setOk("");
+
         try {
-            const { data } = await api.post("/users/login", { username: inputUsername, password: inputPassword });
+            const { data } = await api.post(
+                "/users/login",
+                { username: inputUsername, password: inputPassword },
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+
+            setOk(`Welcome, ${data.username}!`);
+            setInputUsername("");
+            setInputPassword("");
 
         } catch (err) {
-            console.error("Login failed:", err);
+            setError("kusok govna");
         }
-        alert("Login is successful!");
     };
+
 
 
 
