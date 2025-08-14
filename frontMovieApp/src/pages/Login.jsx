@@ -16,6 +16,7 @@ function Login() {
     const [users, setUsers] = useState([]);
     const [inputPassword, setInputPassword] = useState("");
     const [inputUsername, setInputUsername] = useState("");
+    const [logedIn, setLogedIn] = useState(false);
 
 
 
@@ -80,73 +81,88 @@ function Login() {
 
 
             setOk(`Welcome, ${data.username}!`);
+            setLogedIn(true);
             setInputUsername("");
             setInputPassword("");
 
         } catch (err) {
-            setError("kusok govna");
+            setError("Failed to log in. Please check your username and password.");
         }
     };
 
-
+    const logOut = () => {
+        setLogedIn(false);
+        setInputUsername("");
+        setInputPassword("");
+    };
 
 
     return (
         <>
-            <div>
-                <h3>{login ? "Login Page" : "Register Page"}</h3>
-                {error && <p style={{ color: "red" }}>{error}</p>}
-                {ok && <p style={{ color: "green" }}>{ok}</p>}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Password</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            {logedIn ? (
+                <>
+                    <h3>Logged in </h3>
+                    {ok && <p style={{ color: "green" }}>{ok}</p>}
+                    <button className="log-out" onClick={logOut}>log out</button>
+                </>
+            ) : (
+                <>
+                    <div>
+                        <h3>{login ? "Login Page" : "Register Page"}</h3>
+                        {error && <p style={{ color: "red" }}>{error}</p>}
 
-                        {users.map((user) => (
-                            <tr>
-                                <td>{user.id}</td>
-                                <td>{user.username}</td>
-                                <td>{user.email}</td>
-                                <td>{user.password}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <div className="login">
-                {login ? (
-                    <>
-                        <input type="text" placeholder="Username" onChange={(e) => setInputUsername(e.target.value)} required />
-                        <br />
-                        <input type="password" placeholder="Password" onChange={(e) => setInputPassword(e.target.value)} required />
-                        <br />
-                        <button className="login-button" onClick={handleLogin}>Login</button>
-                        <button className="register-button" onClick={() => setLogin(false)}>Register</button>
-                    </>) : (
-                    <>
-                        <input type="text" name="username" placeholder="Username" value={register.username} onChange={onChange} />
-                        <br />
-                        <input type="email" name="email" placeholder="Email" value={register.email} onChange={onChange} />
-                        <br />
-                        <input type="password" name="password" placeholder="Password" value={register.password} onChange={onChange} />
-                        <br />
-                        <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                        <br />
-                        <button className="login-button" onClick={() => setLogin(true)} >
-                            Login
-                        </button>
-                        <button className="register-button" onClick={handleRegister} disabled={loading}>Register</button>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                    </>
-                )}
+                                {users.map((user) => (
+                                    <tr>
+                                        <td>{user.id}</td>
+                                        <td>{user.username}</td>
+                                        <td>{user.email}</td>
+                                        <td>{user.password}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="login">
+                        {login ? (
+                            <>
+                                <input type="text" placeholder="Username" onChange={(e) => setInputUsername(e.target.value)} required />
+                                <br />
+                                <input type="password" placeholder="Password" onChange={(e) => setInputPassword(e.target.value)} required />
+                                <br />
+                                <button className="login-button" onClick={handleLogin}>Login</button>
+                                <button className="register-button" onClick={() => setLogin(false)}>Register</button>
+                            </>) : (
+                            <>
+                                <input type="text" name="username" placeholder="Username" value={register.username} onChange={onChange} />
+                                <br />
+                                <input type="email" name="email" placeholder="Email" value={register.email} onChange={onChange} />
+                                <br />
+                                <input type="password" name="password" placeholder="Password" value={register.password} onChange={onChange} />
+                                <br />
+                                <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                                <br />
+                                <button className="login-button" onClick={() => setLogin(true)} >
+                                    Login
+                                </button>
+                                <button className="register-button" onClick={handleRegister} disabled={loading}>Register</button>
 
-            </div>
+                            </>
+                        )}
+
+                    </div>
+                </>
+            )}
         </>
     )
 }
